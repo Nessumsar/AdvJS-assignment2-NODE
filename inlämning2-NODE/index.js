@@ -4,12 +4,11 @@ var fs = require('fs');
 
 var secretKey = '/secret?key=VERYSECRET';
 var path = require('path');    
-var filePath = path.join(__dirname, 'public-info.txt');
+var txtFilePath = path.join(__dirname, 'public-info.txt');
 var fileContent;
 
-
-function readFile(){
-    fs.readFile(filePath, 'UTF8', (err, data) => {
+function readTxtFile(){
+    fs.readFile(txtFilePath, 'UTF8', (err, data) => {
         if(err){
             console.log(err);
             return null;
@@ -20,50 +19,28 @@ function readFile(){
     });
 }
 
-readFile();
-
+readTxtFile();
 
 http.createServer(respond).listen(3000, () => {
 console.log('Server is active on port 3000')
 });
 
-
-
 function respond(req, res){
-
     let params = url.parse(req.url, true);
 
-    console.log(params.href);
-    
     if(params.href == "/"){
         res.write(`<h1>Publik info: </h1> <p> ${fileContent}`)
     }
 
 
     if(params.href == secretKey){
-        res.write(`<p>Ändra texten i textfil!</p>
-            
-        <textarea name="textarea" id="textarea" cols="30" rows="30">${fileContent}
-        </textarea>
+        res.write(`   
+        <h1>This is a very secret page only YOU can access</h1>
         <br>
         <br>
-        <input type="submit" class="submit" onclick="${updateTxt()}">`);
+        <p>Just kidding!</p>`);
+        
     }
 
     res.end();
-}
-
-
-function updateTxt(){
-    var textarea = document.getElementById('textarea');
-    let newInfo = textarea.textContent;
-
-    fs.writeFile(filePath, newInfo, (err) => {
-        if(err){
-            console.log(err)
-            return null;
-        }
-        console.log('win');
-    })
-
 }
